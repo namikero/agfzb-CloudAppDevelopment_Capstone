@@ -5,9 +5,9 @@ on: workflow_dispatch
 # Environment variables available to all jobs and steps in this workflow
 env:
   IBM_CLOUD_REGION: us-south
-  IBM_CLOUD_GROUP: default
-  IBM_CLOUD_SPACE: dev
-  IBM_CLOUD_ORG:
+  IBM_CLOUD_GROUP: Default
+  IBM_CLOUD_SPACE: djangoserver-space
+  IBM_CLOUD_ORG: mjgonzales.1982@gmail.com
   MANIFEST_NAME: manifest.yml
   IBM_CLOUD_API: ${{secrets.IBM_CLOUD_API_KEY}}
 
@@ -27,6 +27,13 @@ jobs:
           curl -fsSL https://clis.cloud.ibm.com/install/linux | sh
           ibmcloud --version
           ibmcloud config --check-version=false
+          pip3 install -r requirements.txt
+          python3 manage.py makemigrations
+          python3 manage.py makemigrations djangoapp
+          python3 manage.py migrate --run-syncdb
+          python3 manage.py migrate
+          export DJANGO_SUPERUSER_PASSWORD=adminroot
+          python3 manage.py createsuperuser --noinput --username root --email root@gmail.com
         shell: bash
       - name: Install CF plugin
         run: ibmcloud cf install -f

@@ -88,7 +88,7 @@ def registration_request(request):
 def get_dealerships(request):
     context = {}
     if request.method == "GET":
-        url = "https://c8394781.us-south.apigw.appdomain.cloud/api/dealership"
+        url = "https://9667172e.us-south.apigw.appdomain.cloud/api/dealership"
         dealerships = get_dealers_from_cf(url)
         context['dealer_list'] = dealerships
         dealer_names = ' '.join([dealer.short_name for dealer in dealerships])
@@ -101,7 +101,7 @@ def get_dealerships(request):
 def get_dealer_details(request, dealer_id):
     context = {}
     if request.method == "GET":
-        url = "https://c8394781.us-south.apigw.appdomain.cloud/api/review"
+        url = "https://9667172e.us-south.apigw.appdomain.cloud/api/review"
         reviews = get_dealer_reviews_from_cf(url, dealerId=dealer_id)
         #print(reviews)
         context['reviews'] = reviews
@@ -139,7 +139,7 @@ def add_review(request, dealer_id):
                 review['review']['id'] = userr.id
                 review['review']["name"] = userr.first_name + " " + userr.last_name
 
-                url = "https://c8394781.us-south.apigw.appdomain.cloud/api/review"
+                url = "https://9667172e.us-south.apigw.appdomain.cloud/api/review"
                 
                 #json_payload = {}
                 #json_payload['review'] = review

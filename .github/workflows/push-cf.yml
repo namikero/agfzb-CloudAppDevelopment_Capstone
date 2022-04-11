@@ -33,7 +33,7 @@ jobs:
           python3 manage.py migrate --run-syncdb
           python3 manage.py migrate
           export DJANGO_SUPERUSER_PASSWORD=adminroot
-          python3 manage.py createsuperuser --noinput --username root --email root@gmail.com
+          python3 manage.py createsuperuser --noinput --username markroot --email root@gmail.com
         shell: bash
       - name: Install CF plugin
         run: ibmcloud cf install -f

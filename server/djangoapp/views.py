@@ -4,7 +4,8 @@ from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, redirect
 # from .models import related models
 # from .restapis import related methods
-from .restapis import get_dealers_from_cf, get_dealer_reviews_from_cf
+from .models import CarModel, CarMake, CarDealer, DealerReview
+from .restapis import get_dealers_from_cf, get_dealer_reviews_from_cf, get_dealer_by_id_from_cf
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from datetime import datetime
@@ -106,15 +107,16 @@ def get_dealer_details(request, id):
 
 
 # Create a `add_review` view to submit a review
-def add_review(request, dealer_id):
+def add_review(request, id):
     context = {}
     if request.method == 'GET':
         url = "https://9667172e.us-south.apigw.appdomain.cloud/api/dealership"
-        context = {
-            "dealer_id": dealer_id,
-            "dealer_name": get_dealers_from_cf(url)[dealer_id-1].full_name,
-            "cars": CarModel.objects.all()
-        }
+        dealer = get_dealer_by_id_from_cf(url, id=id)
+        context["dealer"] = dealer
+        cars = CarModel.objects.all()
+        print(cars)
+        context["cars"] = cars
+
         return render(request, 'djangoapp/add_review.html', context)
     
     elif request.method == 'POST':
@@ -141,10 +143,10 @@ def add_review(request, dealer_id):
                 review["car_make"]=None
                 review["car_model"]=None
                 review["car_year"]=None
-            json_result = post_request("", review, dealerId=dealer_id)
+            json_result = post_request("", review, id=id)
             if "error" in json_result:
                 context["message"] = "ERROR: Review was not submitted."
             else:
                 context["message"] = "Review was submited"
-        return redirect("djangoapp:dealer_details", dealer_id=dealer_id)
+        return redirect("djangoapp:dealer_details", id=id)
 

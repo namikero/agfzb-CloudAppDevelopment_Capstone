@@ -68,7 +68,13 @@ def get_dealers_from_cf(url, **kwargs):
     results = []
 
     # Call get_request with a URL parameter
-    json_result = get_request(url)
+    state = kwargs.get("state")
+    if state:
+        json_result = get_request(url, state=state)
+    else:
+        json_result = get_request(url)
+    #json_result = get_request(url)
+
     if json_result:
         # Get the row list in JSON as dealers
         dealers = json_result["body"]["rows"]
@@ -141,11 +147,13 @@ def analyze_review_sentiments(text):
         features= Features(sentiment= SentimentOptions())
     ).get_result()
     #print(json.dumps(response))
-    sentiment_label = json.dumps(response, indent=2)
+    #sentiment_label = json.dumps(response, indent=2)
     #sentiment_score = str(response["sentiment"]["document"]["score"])
     #sentiment_label = response["sentiment"]["document"]["label"]
     #print(sentiment_score)
     #print(sentiment_label)
-    sentimentresult = sentiment_label["sentiment"]["document"]["label"]
+
+    #for k in sentiment_label:
+    sentimentresult = str(response["sentiment"]["document"]["label"])
 
     return sentimentresult
